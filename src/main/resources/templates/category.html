@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head lang="en">
+    <title>Uncle George's Pizza</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+     <style>
+        .portfolio-item {
+            margin-bottom: 30px;
+        }
+     </style>
+</head>
+<body>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand" href="/">
+                <img th:src="@{/images/logo.png}" alt="logo" height="35">
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="nav navbar-nav ml-auto">
+                    <li class="nav-item"><a class="nav-link" href="/">HOME</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/categories">CATEGORIES</a></li>
+                    <li class="nav-item">
+                    <a class="nav-link" href="/cart">CART <i class="fa fa-shopping-cart"></i>
+                        <th:block th:if="${cartSize} > 0" th:text="${' ('  + cartSize + ')'}"/>
+                    </a></li>
+                    <th:block th:if="${#request.isUserInRole('USER')}">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" th:text="${'Hello, ' + #request.getRemoteUser()}"></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/logout"><i class="fa fa-sign-out" aria-hidden="true"></i></a>
+                        </li>
+                    </th:block>
+                    <th:block th:unless="${#request.isUserInRole('USER')}">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/login"><i class="fa fa-sign-in" aria-hidden="true"></i> LOG IN</a>
+                        </li>
+                    </th:block>
+                </ul>
+            </div>
+        </nav>
+<div class="container">
+    <br>
+    <div class="jumbotron">
+        <h1 class="display-3 text-center" th:text="${category}"></h1>
+    </div>
+    <div class="row">
+        <th:block th:each="product : ${products}">
+            <div class="col-lg-4 col-sm-6 portfolio-item">
+                <div class="card h-100">
+                    <a th:href="@{${'/products/'+ product.category + '/' +  product.id}}"><img class="card-img-top" th:src="@{${'/images/' + product.images.get(0)}}" src="http://placehold
+                    .it/700x400" alt=""></a>
+                    <div class="card-body text-center">
+                        <h4 class="card-title">
+                            <a th:href="@{${'/products/'+ product.category + '/' + product.id}}" th:text="${product.name}"></a>
+                        </h4>
+                        <p class="text-muted card-text h5" th:text="${product.price} + ' MDL'"></p>
+                        <form action="#" th:action="@{/cart/add}" method="post">
+                            <input hidden type="number" th:name="id" th:value="*{product.id}"/>
+                            <input class="btn btn-outline-success" type="submit" value="Add to Cart"/>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </th:block>
+    </div>
+
+</div>
+
+<footer class="py-5 bg-dark">
+    <div class="container">
+        <p class="m-0 text-center text-white">Made By Gheorghi Dolomanji &copy; 2019</p>
+    </div>
+</footer>
+
+</body>
+
+</html>

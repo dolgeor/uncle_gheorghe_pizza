@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Login</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>
+    </head>
+    <body>
+        <div class="container py-5">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-6 mx-auto">
+                            <div class="card rounded-0">
+                                <div class="card-header">
+                                    <h3 class="mb-0">Login</h3>
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="text-center text-danger" th:if="${param.error}">
+                                       * Invalid username or password.
+                                    </h5>
+                                    <h5 class="text-center text-danger" th:if="${param.logout}">
+                                       * You have been logged out.
+                                    </h5>
+                                    <br>
+                                    <form th:action="@{/login}" method="post">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" placeholder="Your Email *" name="username"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="password" class="form-control" placeholder="Your Password *" name="password"/>
+                                        </div>
+                                        <div class="btn-toolbar">
+                                            <a href="/register" class="col btn btn-block btn-link btn-lg">Register</a>
+                                            <button type="submit" class="col btn btn-block btn-success btn-lg">Login</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

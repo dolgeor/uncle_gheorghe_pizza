@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Cart</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand" href="/">
+                <img th:src="@{/images/logo.png}" alt="logo" height="35">
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="nav navbar-nav ml-auto">
+                    <li class="nav-item"><a class="nav-link" href="/">HOME</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/categories">CATEGORIES</a></li>
+                    <li class="nav-item">
+                    <a class="nav-link" href="/cart">CART <i class="fa fa-shopping-cart"></i>
+                        <th:block th:if="${cartSize} > 0" th:text="${' ('  + cartSize + ')'}"/>
+                    </a></li>
+                    <th:block th:if="${#request.isUserInRole('USER')}">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" th:text="${'Hello, ' + #request.getRemoteUser()}"></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/logout"><i class="fa fa-sign-out" aria-hidden="true"></i></a>
+                        </li>
+                    </th:block>
+                    <th:block th:unless="${#request.isUserInRole('USER')}">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/login"><i class="fa fa-sign-in" aria-hidden="true"></i> LOG IN</a>
+                        </li>
+                    </th:block>
+                </ul>
+            </div>
+        </nav>
+<div class="container">
+    <br>
+    <h2 class="text-center">Cart</h2>
+    <p class="font-italic">Free delivery for orders over 500 MDL</p>
+    <table class="table table-hover">
+        <tbody>
+        <tr th:each="item : ${items}">
+            <td><img th:src="@{${'/images/' + item.product.images.get(0)}}" alt="product" width="120" height="70"></td>
+            <td>
+                <h4 class="nomargin" th:text="${item.product.name}">Product</h4>
+                <p th:text="${item.product.description}">Description</p>
+            </td>
+            <td th:text="${item.product.price}">Price</td>
+            <td>
+                <!--<input type="number" min="1" class="form-control text-center" th:value="${item.quantity}"/>-->
+                <form action="#" th:action="@{/cart/update}" method="post">
+                    <input hidden type="number" th:name="id" th:value="*{item.id}"/>
+                    <input type="number" min="1" class="form-control text-center" th:name="quantity" th:value="*{item.quantity}"/>
+                    <input hidden th:type="submit">
+                </form>
+            </td>
+            <td th:text="${item.product.price * item.quantity }">Price</td>
+            <td>
+                <form action="#" th:action="@{/cart/delete}" method="post">
+                    <input hidden type="number" th:name="id" th:value="*{item.id}"/>
+                    <button type="submit" class="close" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="row">
+        <div class="hidden-md-down col-lg-9 "></div>
+        <div class="col-sm-12 col-md-12 col-lg-3">
+            <table class="table h6 text-muted">
+                <tr>
+                    <td>Sub-Total</td>
+                    <td th:text="${subTotal} + ' MDL'"></td>
+                </tr>
+                <tr>
+                    <td>Delivery</td>
+                    <td th:text="${delivery} + ' MDL'"></td>
+                </tr>
+                <tr class="font-weight-bold">
+                    <td>Total</td>
+                    <td th:text="${total} + ' MDL'"></td>
+                </tr>
+            </table>
+
+            <form action="#" th:action="@{/cart/checkout}" method="post">
+                <button th:type="submit" class="btn btn-lg btn-block btn-success ">Checkout</button>
+            </form>
+        </div>
+    </div>
+    <!--<p class="h6 text-muted text-right" th:text="${subTotal}"></p>-->
+    <!--<p class="h6 text-muted text-right" th:text="${delivery}"></p>-->
+    <!--<strong><p class="h6   text-right font-weight-bold" th:text="${total}"></p></strong>-->
+</div>
+</div>
+</body>
+</html>

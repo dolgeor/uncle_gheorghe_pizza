@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Page Title</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <style>
+        body {padding-top: 54px;}
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="jumbotron">
+
+    <h3 class="text-center" th:text="${'Order ' + order.id +' successfully added'}"></h3>
+    <br>
+    <h5 th:text="${'Customer: ' + order.customer}"></h5>
+    <h5 th:text="${'Email: ' + order.customerEmail}"></h5>
+    <h5 th:text="${'Phone: ' + order.customerPhone}"></h5>
+    <h5 th:text="${'Address: ' + order.customerAddress}"></h5>
+    <h5 th:text="${'Order date: ' + order.date}"></h5>
+    <br>
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Product</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Price</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item : ${order.orderItems}">
+            <td th:text="${item.product.name}"></td>
+            <td th:text="${item.quantity}"></td>
+            <td th:text="${item.product.price}"></td>
+        </tr>
+        </tbody>
+        <tfoot class="text-muted">
+        <tr>
+            <td></td>
+            <td>SubTotal</td>
+            <td th:text="${order.subTotal} + ' MDL'"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>Delivery</td>
+            <td th:text="${order.delivery} + ' MDL'"></td>
+        </tr>
+        <tr class="font-weight-bold">
+            <td></td>
+            <td><strong>Total</strong></td>
+            <td th:text="${order.total} + ' MDL'"></td>
+        </tr>
+        </tfoot>
+    </table>
+    <a class="btn btn-lg btn btn-primary float-right" href="/" role="button"> Home </a>
+
+</div></div>
+</body>
+</html>

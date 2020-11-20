@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<nav class="navbar navbar-default navbar-fixed-top " th:fragment="header">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/"><img th:src="@{/images/logo.png}" alt="logo" height="35"></a>
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#myPage">HOME</a></li>
+                <li><a href="#top">TOP</a></li>
+                <li><a href="#categories">CATEGORIES</a></li>
+                <li><a href="#contact">CONTACT</a></li>
+                <li><a href="/cart">CART <span class="glyphicon glyphicon-shopping-cart "></span>
+                    <th:block th:if="${cartSize} > 0" th:text="${' ('  + cartSize + ')'}"/>
+                </a></li>
+                <th:block th:if="${#request.isUserInRole('USER')}">
+                    <li><a href="#" th:text="${'Hello, ' + #request.getRemoteUser()}"></a></li>
+                    <li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span></a></li>
+                </th:block>
+                <th:block th:unless="${#request.isUserInRole('USER')}">
+                    <li><a href="/login"><span class="glyphicon glyphicon-log-in"> LOG IN</span></a></li>
+                </th:block>
+            </ul>
+        </div>
+    </div>
+</nav>
+</body>
+</html>

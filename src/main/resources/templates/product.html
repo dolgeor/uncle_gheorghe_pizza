@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+    <title>Uncle George's Pizza</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" media="all"
+          href="../static/css/styles.css" th:href="@{/css/styles.css}"/>
+</head>
+<body id="myPage" data-spy="scroll" data-target=".navbar" data-offset="50">
+<nav class="navbar navbar-default navbar-fixed-top ">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/"><img th:src="@{/images/logo.png}" alt="logo" height="35"></a>
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="/">HOME</a></li>
+                <li><a href="/categories">CATEGORIES</a></li>
+                <li><a href="/cart">CART <span class="glyphicon glyphicon-shopping-cart "></span>
+                    <th:block th:if="${cartSize} > 0" th:text="${' ('  + cartSize + ')'}"/>
+                </a></li>
+                <th:block th:if="${#request.isUserInRole('USER')}">
+                    <li><a href="#" th:text="${'Hello, ' + #request.getRemoteUser()}"></a></li>
+                    <li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span></a></li>
+                </th:block>
+                <th:block th:unless="${#request.isUserInRole('USER')}">
+                    <li><a href="/login"><span class="glyphicon glyphicon-log-in"> LOG IN</span></a></li>
+                </th:block>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container-fluid pdp">
+    <div class="row">
+        <div class="col-sm-6">
+            <div id="myCarousel" class="carousel slide" data-ride="carousel">
+                <div class="carousel-inner" role="listbox">
+                    <th:block th:each="img : ${product.images}">
+                        <th:block th:if="${imgStat.first}">
+                            <div class="item active">
+                                <img th:src="@{${'/images/' + img}}" class="img-thumbnail" alt="product" width="1200" height="700">
+                            </div>
+                        </th:block>
+                        <th:block th:unless="${imgStat.first}">
+                            <div class="item">
+                                <img th:src="@{${'/images/' + img}}" class="img-thumbnail" alt="product" width="1200" height="700">
+                            </div>
+                        </th:block>
+                    </th:block>
+                </div>
+                <!-- Left and right controls -->
+                <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+                    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+                    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+            <div th:replace="fragments/rating :: rating"/>
+        </div>
+        <div class="col-sm-6">
+            <h2 class="text-center" th:text="${product.name}">Name</h2>
+            <th:block th:if="${product.category.name() == 'DRINK'}">
+                <p class="text-center" th:text="|Volume: ${product.volume} ml|">Weight</p>
+            </th:block>
+            <th:block th:unless="${product.category.name() == 'DRINK'}">
+                 <h3 class="text-center">Ingredients</h3>
+                 <ul th:each="ingredient : ${product.ingredients}">
+                     <li th:text="${ingredient}"></li>
+                 </ul>
+                 <p class="text-center" th:text="|Weight: ${product.weight} g|">Weight</p>
+            </th:block>
+            <p class="text-muted text-center h3" th:text="|Price: ${product.price} MDL|">Price</p>
+            <form class="text-center" action="#" th:action="@{/cart/add}" method="post">
+                <input hidden type="number" th:field="*{product.id}"/>
+                <input class="btn" type="submit" value="Add to Cart"/>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <br>
+        <br>
+        <h3 class="text-center">Description</h3>
+        <p class="text-center"><i th:text="${product.description}">Description</i></p>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+            <form action="#" method="post" th:action="@{${'/products/'+ product.category + '/' + product.id + '/addReview'}}" >
+                <textarea class="form-control" id="review" name="review" placeholder="Comment" rows="5"></textarea>
+                <br><input class="form-control" id="name" name="name" placeholder="Name" type="text" required>
+                <br><button class="btn center-block" type="submit">Add Review</button>
+            </form>
+        </div>
+    </div>
+
+    <th:block th:each="review : ${reviews}">
+        <div class="row">
+            <blockquote class="pull-right">
+                 <p th:text="${review.review}"></p>
+                 <small><cite th:text="${review.author}"></cite></small>
+            </blockquote>
+        </div>
+    </th:block>
+</div>
+<div th:replace="fragments/footer :: footer"/>
+</body>
+</html>
